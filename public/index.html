@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Checklist Portal</title>
+  <style>
+    :root{
+      --gap: 2vmin;
+      --min-btn-width: 160px;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:#f7f7f7;
+      color:#111;
+    }
+
+    .wrap{
+      min-height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:4vmin;
+      box-sizing:border-box;
+    }
+
+    /* grid: 3 columns on wide screens, 2 columns on medium, 1 on small */
+    .grid{
+      display:flex;
+      gap:var(--gap);
+      width:100%;
+      max-width:1100px;
+      flex-wrap:wrap;
+      justify-content:center;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:white;
+      padding:calc(3vmin + 8px) calc(4vmin + 12px);
+      border-radius:10px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);
+      font-weight:600;
+      font-size:calc(1.6vmin + 12px);
+      min-width:var(--min-btn-width);
+      text-align:center;
+      /* base: allow 3 per row */
+      flex: 1 1 calc(33.333% - var(--gap));
+      box-sizing:border-box;
+    }
+
+    /* six distinct colors */
+    .b1{ background:#0077cc; }  /* blue */
+    .b2{ background:#e84a5f; }  /* red */
+    .b3{ background:#3cb371; }  /* green */
+    .b4{ background:#ff8c00; }  /* orange */
+    .b5{ background:#6a5acd; }  /* purple */
+    .b6{ background:#20b2aa; }  /* teal */
+    .b7{ background:#d81b60; }  /* deep pink */
+    .b8{ background:#3949ab; }  /* indigo */
+    .b9{ background:#7cb342; }  /* lime green */
+
+    @media (max-width:900px){
+      /* 2 per row */
+      .btn{ flex:1 1 calc(50% - var(--gap)); font-size:calc(1.8vmin + 11px); }
+    }
+
+    @media (max-width:520px){
+      /* 1 per row */
+      .btn{ flex:1 1 100%; min-width:0; }
+      .grid{ gap:12px; }
+    }
+
+    @media (min-width:900px){
+      .btn{ padding:22px 36px; font-size:18px; border-radius:12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="grid" aria-label="Main navigation">
+      <a class="btn b1" href="labentry.html">Lab Entry Form</a>
+      <a class="btn b2" href="shipment.html">Shipment Check In</a>
+      <a class="btn b3" href="quarantine.html">Quarantine Form (Inactive)</a>
+      <a class="btn b4" href="cleaning.html">Sanitation Form</a>
+      <a class="btn b5" href="equipment.html">Calibration & Maintenance</a>
+      <a class="btn b6" href="training.html">Training Records</a>
+      <a class="btn b7" href="tour.html">Guest/Lab Security Check</a>
+      <a class="btn b8" href="2.html">Placeholder 1</a>
+      <a class="btn b9" href="3.html">Placeholder 2</a>
+    </nav>
+  </div>
+</body>
+</html>

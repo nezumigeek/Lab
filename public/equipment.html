@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Equipment Calibration & Maintenance</title>
+<style>
+  body{font-family:system-ui,Arial;margin:0;padding:18px;background:#f6f8fb}
+  .card{max-width:980px;margin:0 auto;background:#fff;padding:18px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.06)}
+  h1{font-size:1.1rem;margin:0 0 12px}
+  fieldset{border:1px solid #eaeaea;padding:12px;border-radius:6px;margin-bottom:12px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .col{flex:1 1 240px;min-width:180px}
+  input,select,textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;box-sizing:border-box}
+  .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+  button{padding:8px 12px;border-radius:8px;background:#0077cc;border:0;color:#fff;cursor:pointer}
+  button.secondary{background:#6c757d}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{border:1px solid #eee;padding:8px;text-align:left}
+  pre{background:#f3f3f3;padding:12px;border-radius:6px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Equipment Calibration & Maintenance Log</h1>
+  <form id="form">
+    <fieldset>
+      <legend>Equipment identity</legend>
+      <div class="row">
+        <div class="col"><label>Equipment name</label><input name="name" required></div>
+        <div class="col"><label>Asset / ID #</label><input name="assetId" required></div>
+        <div class="col"><label>Location</label><input name="location"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Maintenance / Calibration action</legend>
+      <div class="row">
+        <div class="col"><label>Type</label><select name="actionType" required><option>Calibration</option><option>Preventive Maintenance</option><option>Repair</option><option>Verification</option></select></div>
+        <div class="col"><label>Date performed</label><input type="date" name="date" required></div>
+        <div class="col"><label>Performed by</label><input name="performedBy" required></div>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <div class="col"><label>Next due date</label><input type="date" name="nextDue"></div>
+        <div class="col"><label>Outcome / results</label><select name="outcome"><option>Pass</option><option>Fail</option><option>Adjusted</option><option>Other</option></select></div>
+        <div class="col"><label>Certificate / attachment ref</label><input name="certRef" placeholder="File name or URL"></div>
+      </div>
+      <div style="margin-top:8px"><label>Notes / corrective action</label><textarea name="notes" rows="3"></textarea></div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" id="clear" class="secondary">Clear</button>
+      <button type="submit">Save & Summary</button>
+    </div>
+  </form>
+
+  <div id="out" style="display:none;margin-top:12px">
+    <h2>Summary</h2>
+    <table id="tbl"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody></tbody></table>
+    <h3>JSON</h3><pre id="json"></pre>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button id="download">Download JSON</button>
+      <button id="print" class="secondary">Print</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const form=document.getElementById('form'), out=document.getElementById('out'), tbody=document.querySelector('#tbl tbody'), jsonEl=document.getElementById('json');
+  form.addEventListener('submit', e=>{ e.preventDefault(); if(!form.checkValidity()){form.reportValidity();return;} const fd=new FormData(form); const obj={}; for(const [k,v] of fd.entries()) obj[k]=v; obj.recordTimestamp=new Date().toISOString(); render(obj); });
+  document.getElementById('clear').onclick=()=>{form.reset(); out.style.display='none'}
+  function render(d){ tbody.innerHTML=''; for(const k in d){ const tr=document.createElement('tr'); tr.innerHTML=`<td>${k}</td><td>${d[k]}</td>`; tbody.appendChild(tr)} jsonEl.textContent=JSON.stringify(d,null,2); out.style.display='block' }
+  document.getElementById('download').onclick=()=>{ const blob=new Blob([jsonEl.textContent],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`equipment-${Date.now()}.json`; document.body.appendChild(a); a.click(); a.remove();}
+  document.getElementById('print').onclick=()=>window.print();
+</script>
+</body>
+</html>

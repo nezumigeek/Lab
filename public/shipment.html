@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shipment Check-In</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#fafafa;color:#111;margin:0;padding:20px;}
+  .container{max-width:960px;margin:0 auto;background:#fff;padding:20px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.06);}
+  h1{font-size:1.25rem;margin:0 0 12px;}
+  fieldset{border:1px solid #e3e3e3;padding:12px;margin:12px 0;border-radius:6px;}
+  legend{font-weight:700;padding:0 6px;}
+  .row{display:flex;gap:12px;flex-wrap:wrap;}
+  .col{flex:1 1 220px;min-width:180px;}
+  label{display:block;font-size:.9rem;margin-bottom:6px;}
+  input[type="text"],input[type="date"],input[type="number"],select,textarea{width:100%;padding:8px;border:1px solid #ddd;border-radius:6px;font-size:.95rem;box-sizing:border-box;}
+  .radio-group{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;}
+  button{padding:10px 14px;border-radius:8px;border:0;background:#0077cc;color:#fff;font-weight:600;cursor:pointer;}
+  button.secondary{background:#6c757d;}
+  pre{white-space:pre-wrap;background:#f3f3f3;padding:12px;border-radius:6px;overflow:auto;}
+  table{width:100%;border-collapse:collapse;margin-top:12px;}
+  th,td{border:1px solid #e6e6e6;padding:8px;text-align:left;}
+  .summary{margin-top:14px;}
+  @media(max-width:520px){.col{flex-basis:100%}}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Shipment Check-In</h1>
+
+  <form id="checkinForm">
+    <fieldset>
+      <legend>Basic shipment details</legend>
+      <div class="row">
+        <div class="col">
+          <label for="receivedDate">Received date</label>
+          <input id="receivedDate" name="receivedDate" type="date" required>
+        </div>
+        <div class="col">
+          <label for="timeReceived">Time received</label>
+          <input id="timeReceived" name="timeReceived" type="text" placeholder="HH:MM (24h)">
+        </div>
+        <div class="col">
+          <label for="carrier">Carrier / transporter</label>
+          <input id="carrier" name="carrier" type="text" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="supplier">Supplier name & contact</label>
+          <input id="supplier" name="supplier" type="text" required>
+        </div>
+        <div class="col">
+          <label for="po">PO / Invoice #</label>
+          <input id="po" name="po" type="text">
+        </div>
+        <div class="col">
+          <label for="shipmentId">Shipment / Bill of lading #</label>
+          <input id="shipmentId" name="shipmentId" type="text">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Product identification</legend>
+      <div class="row">
+        <div class="col">
+          <label for="productName">Product name / SKU</label>
+          <input id="productName" name="productName" type="text" required>
+        </div>
+        <div class="col">
+          <label for="lot">Lot / Batch #</label>
+          <input id="lot" name="lot" type="text" required>
+        </div>
+        <div class="col">
+          <label for="exp">Expiration / Best before</label>
+          <input id="exp" name="exp" type="date">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="quantity">Quantity received (units / weight)</label>
+          <input id="quantity" name="quantity" type="text" placeholder="e.g. 100 boxes / 50 kg" required>
+        </div>
+        <div class="col">
+          <label for="packaging">Packaging type & integrity</label>
+          <select id="packaging" name="packaging" required>
+            <option value="">--select--</option>
+            <option value="intact">Intact</option>
+            <option value="minor_damage">Minor damage</option>
+            <option value="major_damage">Major damage</option>
+            <option value="open/tampered">Open / Tampered</option>
+          </select>
+        </div>
+        <div class="col">
+          <label>Labelling correct?</label>
+          <div class="radio-group" role="radiogroup" aria-label="labelingCorrect">
+            <label><input type="radio" name="labeling" value="yes" required> Yes</label>
+            <label><input type="radio" name="labeling" value="no"> No</label>
+            <label><input type="radio" name="labeling" value="n/a"> N/A</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Safety, temperature & condition</legend>
+      <div class="row">
+        <div class="col">
+          <label for="shipTemp">Shipping temperature (if applicable)</label>
+          <input id="shipTemp" name="shipTemp" type="text" placeholder="e.g. 2–8°C or ambient">
+        </div>
+        <div class="col">
+          <label for="recTemp">Temperature on receipt</label>
+          <input id="recTemp" name="recTemp" type="text" placeholder="°C / °F">
+        </div>
+        <div class="col">
+          <label>Temperature within acceptable range?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="tempAccept" value="yes" required> Yes</label>
+            <label><input type="radio" name="tempAccept" value="no"> No</label>
+            <label><input type="radio" name="tempAccept" value="n/a"> N/A</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>Visual inspection (foreign matter, contamination)</label>
+          <div class="radio-group">
+            <label><input type="radio" name="visual" value="pass" required> Pass</label>
+            <label><input type="radio" name="visual" value="fail"> Fail</label>
+            <label><input type="radio" name="visual" value="suspect"> Suspect</label>
+          </div>
+        </div>
+        <div class="col">
+          <label>Evidence of pest infestation?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="pests" value="no" required> No</label>
+            <label><input type="radio" name="pests" value="yes"> Yes</label>
+            <label><input type="radio" name="pests" value="unknown"> Unknown</label>
+          </div>
+        </div>
+        <div class="col">
+          <label>Allergen labeling present?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="allergenLabel" value="yes" required> Yes</label>
+            <label><input type="radio" name="allergenLabel" value="no"> No</label>
+            <label><input type="radio" name="allergenLabel" value="n/a"> N/A</label>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Documentation & testing</legend>
+      <div class="row">
+        <div class="col">
+          <label>Certificate of Analysis (COA) provided?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="coa" value="yes" required> Yes</label>
+            <label><input type="radio" name="coa" value="no"> No</label>
+            <label><input type="radio" name="coa" value="pending"> Pending</label>
+          </div>
+        </div>
+        <div class="col">
+          <label>COA matches specification?</label>
+          <div class="radio-group">
+            <label><input type="radio" name="coaMatch" value="yes" required> Yes</label>
+            <label><input type="radio" name="coaMatch" value="no"> No</label>
+            <label><input type="radio" name="coaMatch" value="n/a"> N/A</label>
+          </div>
+        </div>
+        <div class="col">
+          <label for="sampleRetained">Sample retained? (location)</label>
+          <input id="sampleRetained" name="sampleRetained" type="text" placeholder="e.g. Quarantine shelf A, 2 samples">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label for="testingNeeded">Testing required (microbiological, chemical)</label>
+          <input id="testingNeeded" name="testingNeeded" type="text" placeholder="e.g. Salmonella PCR, potency assay">
+        </div>
+        <div class="col">
+          <label for="testDue">Expected test completion / retest date</label>
+          <input id="testDue" name="testDue" type="date">
+        </div>
+        <div class="col">
+          <label for="cofc">Other docs (COC, shipping manifest)</label>
+          <input id="cofc" name="cofc" type="text" placeholder="List documents">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Disposition & corrective actions</legend>
+      <div class="row">
+        <div class="col">
+          <label>Disposition</label>
+          <select id="disposition" name="disposition" required>
+            <option value="">--select--</option>
+            <option value="release_to_inventory">Release to inventory</option>
+            <option value="quarantine">Quarantine</option>
+            <option value="reject_return_to_supplier">Reject / Return to supplier</option>
+            <option value="hold_for_testing">Hold for testing</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="responsible">Receiving personnel (name / ID)</label>
+          <input id="responsible" name="responsible" type="text" required>
+        </div>
+        <div class="col">
+          <label for="notes">Comments / corrective action notes</label>
+          <input id="notes" name="notes" type="text" placeholder="Describe actions taken">
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="btns">
+      <button type="button" id="clearBtn" class="secondary">Clear</button>
+      <button type="submit">Generate Summary</button>
+    </div>
+  </form>
+
+  <div id="output" class="summary" aria-live="polite" style="display:none;">
+    <h2>Summary</h2>
+    <table id="summaryTable">
+      <thead><tr><th>Field</th><th>Value</th></tr></thead>
+      <tbody></tbody>
+    </table>
+
+    <h3>JSON</h3>
+    <pre id="jsonOut"></pre>
+
+    <div style="display:flex;gap:8px;margin-top:8px;">
+      <button id="downloadJson">Download JSON</button>
+      <button id="printBtn" class="secondary">Print</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Collect form fields and build summary object
+  const form = document.getElementById('checkinForm');
+  const output = document.getElementById('output');
+  const tbody = document.querySelector('#summaryTable tbody');
+  const jsonOut = document.getElementById('jsonOut');
+
+  function getFormData() {
+    const fd = new FormData(form);
+    const obj = {};
+    for (const [k,v] of fd.entries()) {
+      // If multiple same-name radios exist, FormData returns selected only; keep as-is
+      obj[k] = v;
+    }
+    // Standardized checks and derived fields useful for compliance records:
+    obj.recordTimestamp = new Date().toISOString();
+    // Basic validation fallback defaults
+    if (!obj.timeReceived) obj.timeReceived = '';
+    return obj;
+  }
+
+  function renderSummary(data) {
+    tbody.innerHTML = '';
+    const order = [
+      ['receivedDate','Received date'],
+      ['timeReceived','Time received'],
+      ['carrier','Carrier / transporter'],
+      ['supplier','Supplier'],
+      ['po','PO / Invoice #'],
+      ['shipmentId','Shipment / BOL #'],
+      ['productName','Product / SKU'],
+      ['lot','Lot / Batch #'],
+      ['exp','Expiration / BBE'],
+      ['quantity','Quantity received'],
+      ['packaging','Packaging & integrity'],
+      ['labeling','Labeling correct'],
+      ['shipTemp','Shipping temperature'],
+      ['recTemp','Receipt temperature'],
+      ['tempAccept','Temperature acceptable'],
+      ['visual','Visual inspection'],
+      ['pests','Pest evidence'],
+      ['allergenLabel','Allergen labeling'],
+      ['coa','COA provided'],
+      ['coaMatch','COA matches spec'],
+      ['sampleRetained','Sample retained'],
+      ['testingNeeded','Testing required'],
+      ['testDue','Test completion date'],
+      ['cofc','Other docs'],
+      ['disposition','Disposition'],
+      ['responsible','Receiving personnel'],
+      ['notes','Comments / corrective actions'],
+      ['recordTimestamp','Record timestamp (ISO)']
+    ];
+    for (const [key,label] of order) {
+      const val = data[key] ?? '';
+      const tr = document.createElement('tr');
+      const th = document.createElement('td'); th.textContent = label;
+      const td = document.createElement('td'); td.textContent = val;
+      tr.appendChild(th); tr.appendChild(td);
+      tbody.appendChild(tr);
+    }
+    jsonOut.textContent = JSON.stringify(data,null,2);
+    output.style.display = 'block';
+    output.scrollIntoView({behavior:'smooth'});
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // minimal required fields check (form has required attributes)
+    if (!form.checkValidity()) { form.reportValidity(); return; }
+    const data = getFormData();
+    renderSummary(data);
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    form.reset();
+    output.style.display = 'none';
+  });
+
+  document.getElementById('downloadJson').addEventListener('click', () => {
+    const data = jsonOut.textContent || '{}';
+    const blob = new Blob([data], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `shipment-checkin-${new Date().toISOString()}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+</script>
+</body>
+</html>

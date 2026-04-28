@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Guest & Security Entry Portal</title>
+  <style>
+    :root {
+      --primary: #d81b60;
+      --bg: #f7f7f7;
+      --text: #111;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .wrap {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .card {
+      background: white;
+      width: 100%;
+      max-width: 500px;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      margin: 0 0 20px 0;
+      color: var(--primary);
+      font-size: 1.5rem;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 10px;
+    }
+
+    .group-section {
+      margin-bottom: 20px;
+      background: #fff9fb;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #fce4ec;
+    }
+
+    /* Styled input, textarea, AND select */
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-family: inherit;
+      font-size: 14px;
+      background: white;
+    }
+
+    .q-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      line-height: 1.4;
+      margin-bottom: 20px;
+      min-height: 60px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .radio-group input {
+      width: auto;
+      margin-right: 10px;
+      transform: scale(1.3);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:disabled { background: #eee; color: #aaa; cursor: not-allowed; }
+    #prev { background: #eee; color: #444; }
+    #next, #submit { background: var(--primary); color: white; }
+    
+    .label-hint {
+      font-size: 0.8rem;
+      color: #666;
+      margin-top: 10px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h2 id="form-title">Guest/Security Entry</h2>
+      
+      <div id="group-info" class="group-section">
+        <label class="label-hint">Authorized Lead Representative:</label>
+        <select id="lead-name">
+          <option value="" disabled selected>-- Select Lead --</option>
+          <option value="Person 1">Person 1</option> 
+	      <option value="Person 2">Person 2</option>
+          <option value="Person 3">Person 3</option>
+
+        </select>
+
+        <input type="number" id="guest-count" placeholder="Total number of people including self and all employees.">
+        
+        <span class="label-hint">Names of everyone in the group:</span>
+        <textarea id="guest-names" placeholder="Enter full names..."></textarea>
+      </div>
+
+      <div class="q-container">
+        <p class="q-text" id="q-title">Loading...</p>
+        <div class="radio-group">
+          <label><input type="radio" name="attest" id="ans-yes" value="Yes"> Yes</label>
+          <label><input type="radio" name="attest" id="ans-no" value="No"> No</label>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="prev" disabled>Back</button>
+        <button id="next">Next</button>
+        <button id="submit" style="display:none">Submit Entry</button>
+      </div>
+    </div>
+  </div>
+  <script src="tour-script.js"></script>
+</body>
+</html>
