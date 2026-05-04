@@ -40,7 +40,7 @@ node server.js
 The server will be active at http://localhost:3000.
 
 Change Log
-[1.0.0] - 2024-04-28
+[1.0.0] - 2026-04-28
 
 Added
 
